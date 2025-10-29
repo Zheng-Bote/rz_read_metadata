@@ -1,0 +1,14 @@
+{
+    "Id" : "rz_read_metadata",
+    "Name" : "Rz_read_metadata",
+    "Version" : "0.0.1",
+    "CompatVersion" : "0.0.1",
+    "Vendor" : "ZHENG Robert",
+    "VendorId" : "zhengrobert",
+    "Copyright" : "(C) ZHENG Robert",
+    "License" : "MIT",
+    "Description" : "reads EXIF-/IPTC-/XMP-Metadata from photo",
+    "Url" : "https://www.hase-zheng.net",
+    "DocumentationUrl" : "",
+    ${IDE_PLUGIN_DEPENDENCIES}
+}

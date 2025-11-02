@@ -15,7 +15,6 @@ public:
     explicit Rz_read_metadata(QObject *parent = nullptr);
     ~Rz_read_metadata();
 
-private:
 signals:
 public slots:
 
@@ -26,7 +25,7 @@ public:
     QString getVersion() Q_DECL_OVERRIDE;
     QString getDescription() Q_DECL_OVERRIDE;
 
-    void parseFile(QMap<QString, QString> &mapParseKeys, QString pathToFile) Q_DECL_OVERRIDE;
+    void parseFile(QMap<QString, QString> &empty, QString pathToFile) Q_DECL_OVERRIDE;
     void writeFile(QMap<QString, QString> mapParseKeys,
                    QMap<QString, QString> mapFileAttribs,
                    QString pathToFile) Q_DECL_OVERRIDE;

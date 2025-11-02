@@ -31,18 +31,21 @@ endif()
 configure_file("${CMAKE_SOURCE_DIR}/configure/rz_config.h.in"
                "${CMAKE_SOURCE_DIR}/includes/rz_config.h")
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
-
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Sql)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Sql)
+find_package(exiv2lib REQUIRED CONFIG NAMES exiv2)
 
 add_library(
   rz_read_metadata SHARED
   rz_read_metadata.cpp
   rz_read_metadata.hpp
-  includes/rz_photo-gallery_plugins.hpp)
+  includes/rz_photo-gallery_plugins.hpp
+  includes/rz_photo_metadata.hpp includes/rz_photo_metadata.cpp
+  includes/database.cpp includes/database.hpp includes/sqlite3.cpp includes/sqlite3.hpp
+)
 
 target_link_libraries(rz_read_metadata
-                      PRIVATE Qt${QT_VERSION_MAJOR}::Core)
+                      PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Sql exiv2lib)
 
 target_compile_definitions(rz_read_metadata
                            PRIVATE RZ_READ_METADATA_LIBRARY)

@@ -2,7 +2,7 @@
 
 Photo_Metadata::Photo_Metadata() {}
 
-Photo_Metadata::Photo_Metadata(const QString &pathToImageInput)
+Photo_Metadata::Photo_Metadata(QString &pathToImageInput)
 {
     setImageStruct(pathToImageInput);
 }
@@ -18,28 +18,13 @@ bool Photo_Metadata::isValidMetaImageType()
     }
 }
 
-std::tuple<bool, std::string> Photo_Metadata::openMetaDb(QString &pathToSQLiteDb)
+void Photo_Metadata::setImageStruct(QString &pathToImageInput)
 {
-    const QFile db(pathToSQLiteDb);
+    //QFile file(pathToImageInput);
+    //QFileInfo fileInfo(file.fileName());
 
-    if (!db.exists() && !db.isReadable()) {
-        qDebug() << "Photo_Metadata::openMetaDatabase: NOK: File doesn't exist or is not readable";
-        return std::make_tuple(
-            false, "Photo_Metadata::setPathToMetaDB: File doesn't exist or is not readable");
-    }
-
-    metaDb = new SQLite3;
-    auto [oknok, msg] = metaDb->openDb(pathToSQLiteDb);
-    qDebug() << "Photo_Metadata::openMetaDatabase: " << oknok << " " << msg;
-
-    return std::make_tuple(oknok, msg);
-}
-
-void Photo_Metadata::setImageStruct(const QString &pathToImageInput)
-{
-    QFile file(pathToImageInput);
-    QFileInfo fileInfo(file.fileName());
-    imgStruct = *new class imageStruct;
+    QFileInfo fileInfo(pathToImageInput);
+    //imgStruct = *new class imageStruct;
 
     imgStruct.fileName = fileInfo.fileName();
     imgStruct.fileBasename = fileInfo.completeBaseName();
@@ -108,65 +93,35 @@ void Photo_Metadata::setValidMetatagsXmp()
     }
 }
 
-bool Photo_Metadata::hasValidImageType()
+void Photo_Metadata::setMetadataValues(const QHash<QString, QString> &defaultMetaKeys, QString type)
 {
-    if (validMetaImageTypes.contains(imgStruct.fileSuffix.toLower())) {
-        return true;
-    } else {
-        return false;
+    if (!isValidMetaImageType()) {
+        return;
+    }
+
+    if (type.contains("EXIF")) {
+        exifMetaTags = defaultMetaKeys;
+        setValidMetatagsExif();
+    }
+    if (type.contains("IPTC")) {
+        iptcMetaTags = defaultMetaKeys;
+        setValidMetatagsIptc();
+    }
+    if (type.contains("XMP")) {
+        xmpMetaTags = defaultMetaKeys;
+        setValidMetatagsXmp();
     }
 }
 
-std::tuple<bool, std::string> Photo_Metadata::setMetaDb(QString &pathToSQLiteDb)
+QHash<QString, QString> Photo_Metadata::getMetaData(QString type)
 {
-    return openMetaDb(pathToSQLiteDb);
-}
-
-std::tuple<bool, std::string> Photo_Metadata::setDefaultMetakeys()
-{
-    QString queryStr0 = "SELECT attribute FROM ";
-    QString queryStr2 = " WHERE active = 1";
-
-    QSqlQuery query;
-
-    query.prepare(queryStr0 + "EXIF" + queryStr2);
-    if (!query.exec()) {
-        qDebug() << "Error executeQuery:" << query.lastError().text();
-        return std::make_tuple(false, query.lastError().text().toStdString());
-    } else {
-        while (query.next()) {
-            exifMetaTags.insert(query.value("attribute").toString(), "");
-        }
+    if (type.contains("IPTC")) {
+        return iptcMetaTags;
     }
-
-    query.prepare(queryStr0 + "IPTC" + queryStr2);
-    if (!query.exec()) {
-        qDebug() << "Error executeQuery:" << query.lastError().text();
-        return std::make_tuple(false, query.lastError().text().toStdString());
-    } else {
-        while (query.next()) {
-            iptcMetaTags.insert(query.value("attribute").toString(), "");
-        }
+    if (type.contains("XMP")) {
+        return xmpMetaTags;
     }
-
-    query.prepare(queryStr0 + "XMP" + queryStr2);
-    if (!query.exec()) {
-        qDebug() << "Error executeQuery:" << query.lastError().text();
-        return std::make_tuple(false, query.lastError().text().toStdString());
-    } else {
-        while (query.next()) {
-            xmpMetaTags.insert(query.value("attribute").toString(), "");
-        }
-    }
-
-    return std::make_tuple(true, "msg");
-}
-
-void Photo_Metadata::setMetadataValues()
-{
-    setValidMetatagsExif();
-    setValidMetatagsIptc();
-    setValidMetatagsXmp();
+    return exifMetaTags;
 }
 
 void Photo_Metadata::listMetadataValues(QString &metaType)

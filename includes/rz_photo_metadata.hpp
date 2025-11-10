@@ -6,20 +6,15 @@
 #include <QString>
 #include <exiv2/exiv2.hpp>
 
-#include "sqlite3.hpp"
 
 class Photo_Metadata
 {
 public:
     Photo_Metadata();
-    Photo_Metadata(const QString &pathToImageInput);
+    Photo_Metadata(QString &pathToImageInput);
 
 private:
     const QList<QString> validMetaImageTypes = {"jpg", "jpeg", "png", "webp", "tiff"};
-    bool isValidMetaImageType();
-
-    SQLite3 *metaDb;
-    std::tuple<bool, std::string> openMetaDb(QString &pathToSQLiteDb);
 
     struct imageStruct
     {
@@ -32,7 +27,7 @@ private:
         QList<int> webpSizes = {480, 680, 800, 1024, 1280};
     };
     imageStruct imgStruct;
-    void setImageStruct(const QString &imageInput);
+    void setImageStruct(QString &imageInput);
 
     QHash<QString, QString> exifMetaTags;
     QHash<QString, QString> iptcMetaTags;
@@ -42,9 +37,10 @@ private:
     void setValidMetatagsXmp();
 
 public:
-    bool hasValidImageType();
-    std::tuple<bool, std::string> setMetaDb(QString &pathToSQLiteDb);
-    std::tuple<bool, std::string> setDefaultMetakeys();
-    void setMetadataValues();
+    bool isValidMetaImageType();
+
+    void setMetadataValues(const QHash<QString, QString> &defaultMetaKeys, QString type);
+    QHash<QString, QString> getMetaData(QString type);
+
     void listMetadataValues(QString &metaType);
 };

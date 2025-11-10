@@ -19,45 +19,53 @@ Rz_read_metadata::~Rz_read_metadata()
     //qDebug() << "Plugin DeConstructor";
 }
 
-QString Rz_read_metadata::getNameShort()
+QString Rz_read_metadata::getPluginNameShort()
 {
     return PLUGIN_SHORTNAME;
 }
 
-QString Rz_read_metadata::getNameLong()
+QString Rz_read_metadata::getPluginNameLong()
 {
     return PLUGIN_NAME;
 }
 
-QString Rz_read_metadata::getVersion()
+QString Rz_read_metadata::getPluginVersion()
 {
     return PLUGIN_NAME + "-v" + PLUGIN_VERSION;
 }
 
-QString Rz_read_metadata::getDescription()
+QString Rz_read_metadata::getPluginDescription()
 {
     return PLUGIN_DESCRIPTION;
 }
 
-void Rz_read_metadata::parseFile(QMap<QString, QString> &empty, QString pathToFile)
+std::tuple<bool, std::string> Rz_read_metadata::parseFile(QMap<QString, QString> &empty,
+                                                          QString pathToFile)
 {
-    Photo_Metadata *photo = new Photo_Metadata(pathToFile);
-
-    if (!photo->hasValidImageType()) {
-        qDebug() << "NOK img type";
-    } else {
-        // TODO: read from ini /get para
-        QString metaDb = "/home/zb_bamboo/DEV/__NEW__/CPP/qt_files_photo-gallery/src/build/"
-                         "Desktop_Qt_6_7_3-Debug/qt_metadata_desktop.sqlite";
-        photo->setMetaDb(metaDb);
-        photo->setDefaultMetakeys();
-        photo->setMetadataValues();
-        QString metaType = "EXIF";
-        photo->listMetadataValues(metaType);
-    }
+    Photo_Metadata *photoOri = new Photo_Metadata(pathToFile);
+    photo = photoOri;
+    // Photo_Metadata *photo = new Photo_Metadata(pathToFile);
+    return std::make_tuple(true, "Rz_read_metadata::parseFile");
 }
 
-void Rz_read_metadata::writeFile(QMap<QString, QString> mapParseKeys,
-                                 QMap<QString, QString> mapFileAttribs,
-                                 QString pathToFile)
-{}
+std::tuple<bool, std::string> Rz_read_metadata::writeFile(QMap<QString, QString> mapParseKeys,
+                                                          QMap<QString, QString> mapFileAttribs,
+                                                          QString pathToFile)
+{
+    return std::make_tuple(true, "Rz_read_metadata::writeFile");
+}
+
+void Rz_read_metadata::setHashMap(const QHash<QString, QString> defaultMetaKeys, QString type)
+{
+    photo->setMetadataValues(defaultMetaKeys, type);
+}
+
+QHash<QString, QString> Rz_read_metadata::getHashMap(QString type)
+{
+    return photo->getMetaData(type);
+}
+
+std::tuple<bool, std::string> Rz_read_metadata::isValidMetaImg()
+{
+    return std::make_tuple(photo->isValidMetaImageType(), "Rz_read_metadata::isValidMetaImg");
+}

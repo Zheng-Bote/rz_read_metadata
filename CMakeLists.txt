@@ -3,10 +3,10 @@ cmake_minimum_required(VERSION 3.23)
 # Remove when sharing with others.
 list(APPEND CMAKE_PREFIX_PATH "/home/zb_bamboo/DEV/__NEW__/CPP/Qt_Plugins/plugins")
 
-project(Rz_read_metadata
-  VERSION 0.01.0
-      DESCRIPTION "Plugin to read/write photo metadata"
-      HOMEPAGE_URL "https://github.com/Zheng-Bote/qt_metadata_desktop"
+project(rz_read_metadata
+  VERSION 0.2.0
+      DESCRIPTION "Plugin to read photo EXIF-/IPTC-/XMP-metadata"
+      HOMEPAGE_URL "https://github.com/Zheng-Bote/rz_read_metadata/"
       LANGUAGES CXX)
 
 set(CMAKE_AUTOMOC ON)
@@ -17,7 +17,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(PROG_EXEC_NAME "${PROJECT_NAME}")
-set(PROG_NAME "Photos to Gallery")
+set(PROG_NAME "read Metadata")
 set(PROG_VERSION "${PROJECT_VERSION}")
 set(PROG_HOMEPAGE "${PROJECT_HOMEPAGE_URL}")
 set(PROG_DESCRIPTION "${PROJECT_DESCRIPTION}")
@@ -31,21 +31,19 @@ endif()
 configure_file("${CMAKE_SOURCE_DIR}/configure/rz_config.h.in"
                "${CMAKE_SOURCE_DIR}/includes/rz_config.h")
 
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Sql)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Sql)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 find_package(exiv2lib REQUIRED CONFIG NAMES exiv2)
 
 add_library(
-  rz_read_metadata SHARED
-  rz_read_metadata.cpp
-  rz_read_metadata.hpp
+  ${PROJECT_NAME} SHARED
+  rz_read_metadata.cpp rz_read_metadata.hpp
   includes/rz_photo-gallery_plugins.hpp
   includes/rz_photo_metadata.hpp includes/rz_photo_metadata.cpp
-  includes/database.cpp includes/database.hpp includes/sqlite3.cpp includes/sqlite3.hpp
 )
 
-target_link_libraries(rz_read_metadata
-                      PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Sql exiv2lib)
+target_link_libraries(${PROJECT_NAME}
+                      PRIVATE Qt${QT_VERSION_MAJOR}::Core exiv2lib)
 
-target_compile_definitions(rz_read_metadata
+target_compile_definitions(${PROJECT_NAME}
                            PRIVATE RZ_READ_METADATA_LIBRARY)

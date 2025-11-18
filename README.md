@@ -174,13 +174,17 @@ bla bla ... with a little help from my friends
 │   └── rz_config.h.in
 ├── includes
 │   ├── rz_config.h
-│   └── rz_photo-gallery_plugins.hpp
+│   ├── rz_photo-gallery_plugins.hpp
+│   ├── rz_photo_metadata.cpp
+│   ├── rz_photo_metadata.hpp
+│   ├── rz_snippets.cpp
+│   └── rz_snippets.hpp
 ├── rz_read_metadata.cpp
 ├── rz_read_metadata.hpp
 ├── rz_read_metadataconstants.hpp
 └── tree.bak
 
-8 directories, 26 files
+8 directories, 30 files
 ```
 <!-- readme-tree end -->
 

@@ -1,7 +1,7 @@
 <div id="top" align="center">
-<h1>GH Repo Template</h1>
+<h1>rz_read_metadata</h1>
 
-<p>Plugin for qt_files_photo-gallery to read/write EXIF-/IPTC-/XMP- metadata</p>
+<p>Plugin for qt_files_photo-gallery to read EXIF-/IPTC-/XMP- metadata of an image</p>
 
 [Report Issue](https://github.com/Zheng-Bote/rz_read_metadata/issues) [Request Feature](https://github.com/Zheng-Bote/rz_read_metadata/pulls)
 
@@ -62,7 +62,7 @@
 ![Svelte.js](https://img.shields.io/badge/Svelte-5-324FFF?logo=svelte)
 ![CSS3](https://img.shields.io/badge/CSS-663399?logo=css3)
 
-Repo template with README-template and some Github workflows and Github actions.
+Plugin for qt_files_photo-gallery to read EXIF-/IPTC-/XMP- metadata of an image.
 
 ### Features
 
